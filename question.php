@@ -1,3 +1,37 @@
+<?php include 'database.php'; ?>
+<?php session_start(); ?>
+<?php
+	//Set question number_format
+	$number = (int) $_GET['n'];
+	/*
+	*	Get total question
+	*/
+		
+	$query = "SELECT * FROM questions";
+	
+	//Get results
+	
+	$results = $mysqli->query($query) or die($mysqli->error.__LINE__);
+	$total = $results->num_rows;
+
+	/*
+	*	Get Question
+	*/
+	$query = "SELECT * FROM questions WHERE question_number = $number";
+	//Get result
+	$result = $mysqli->query($query) or die($mysqli->error.__LINE__);
+	
+	$question = $result->fetch_assoc();
+	
+	/*
+	*	Get Choices
+	*/
+	$query = "SELECT * FROM choices WHERE question_number = $number";
+	//Get result
+	$choices = $mysqli->query($query) or die($mysqli->error.__LINE__);
+	
+
+?>
 <!DOCTYPE html>
 <html> 
 	<head>
@@ -13,18 +47,21 @@
 		</header>
 		<main>
 			<div class="container">
-				<div class="current">Question 1 of 5</div>
+				<div class="current">Question <?php echo $question['question_number']; ?> of <?php echo $total; ?> </div>
 				<p classs="question">
-					What does QALR stands for?
+					<?php echo $question['text'] ?>
 				</p>
 				<form method="post" action="process.php">
 					<ul class="choices">
-						<li><input name="choice" type="radio" value="1" />QUANTITATIVE</li>
-						<li><input name="choice" type="radio" value="1" />LOGICAL </li>
-						<li><input name="choice" type="radio" value="1" />VERBAL </li>
-						<li><input name="choice" type="radio" value="1" />NON VERBAL </li>
+						<?php while($row = $choices->fetch_assoc()): ?>
+						<?php// $count =1; echo $count ?>
+						<li><input name="choice" type="radio" value="<?php echo $row['id']?>" /><?php echo $row['text']?></li>
+						<?php //$count++; ?>
+						<?php endwhile; ?>
 					</ul>
 					<input type="submit" value="Submit" />
+					<input type="hidden" name="number" value="<?php echo $number; ?>" />
+				
 			</div>
 		</main>
 		<footer>
