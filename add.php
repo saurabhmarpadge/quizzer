@@ -13,6 +13,7 @@
 		</header>
 		<main>
 			<div class="container">
+			<h2>Add A Question</h2>
 				<form method="post" action="add.php">
 				<p>
 					<label>Question Number</label>
